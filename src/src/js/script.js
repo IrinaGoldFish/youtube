@@ -182,6 +182,7 @@ let sliceTitle = (selector, count) => {
       });
     }, 300);
   };
+  
   createVideo();
   let loadVideo = (id) => {
     player.loadVideoById({'videoId':`${id}`});
