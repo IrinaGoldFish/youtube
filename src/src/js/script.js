@@ -102,5 +102,87 @@ more.addEventListener("click", () => {
         setTimeout(() => {
             card.classList.remove("videos__item-active");
         }, 10);
-    }
+        bindNewModal(card);
+    } 
+    if (night) {
+        drawAll('#fff');
+      }
+      sliceTitle('.videos__item-descr', 80);
+    
 }); 
+
+let sliceTitle = (selector, count) => {
+    document.querySelectorAll(selector).forEach(item => {
+      item.textContent.trim();
+
+      if (item.textContent.length < count) {
+        return;
+      } else {
+        const str = item.textContent.slice(0, count + 1) + '...';
+        item.textContent = str;
+      }
+    });
+  };
+  sliceTitle('.videos__item-descr', 80);
+
+  // Modal
+  let openModal = () => {
+    modal.style.display = 'block';
+  };
+  let closeModal = () => {
+    modal.style.display = 'none';
+    player.stopVideo();
+  };
+    // Bind Modal for all cards
+  let bindModal = cards => {
+    cards.forEach(item => {
+      item.addEventListener('click', e => {
+        e.preventDefault();
+        const id = item.getAttribute('data-url');
+        loadVideo(id);
+        openModal();
+      });
+    });
+  };
+  bindModal(videos);
+    // Bind Modal for new cards
+  let bindNewModal = card => {
+    card.addEventListener('click', e => {
+        e.preventDefault();
+        const id = card.getAttribute('data-url');
+        loadVideo(id);
+        openModal();
+    });
+  };
+    // Overlay click close
+  modal.addEventListener('click', e => {
+    let t = e.target;
+    if(!t.classList.contains('modal__body')){
+      closeModal();
+    }
+  });
+  document.body.addEventListener('keydown', e => {
+    if(e.which == 27){
+      closeModal();
+    }
+  });
+    // Adding videos by YouTube API
+  let createVideo = () => {
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    setTimeout(() => {
+      player = new YT.Player('frame', {
+        height: '100%',
+        width: '100%',
+        videoId: 'M7lc1UVf-VE'
+      });
+    }, 300);
+  };
+  createVideo();
+  let loadVideo = (id) => {
+    player.loadVideoById({'videoId':`${id}`});
+  }
